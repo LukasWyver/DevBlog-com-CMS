@@ -10,7 +10,7 @@ export default function Detail() {
       <Button
         title="Detalhes"
         onPress={() => {
-          navigation.navigate("CategoryPosts");
+          navigation.navigate("Category");
         }}
       />
     </View>
