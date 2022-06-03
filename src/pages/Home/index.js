@@ -15,14 +15,18 @@ import { getFavorite, setFavorite } from "../../services/favorite";
 
 import CategoryItem from "../../components/CategoryItem";
 import FavoritePost from "../../components/FavoritePost";
+import PostItem from "../../components/PostItem";
 
 export default function Home() {
   const navigation = useNavigation();
   const [categories, setCategories] = useState([]);
   const [favCategories, setFavCategories] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     async function loadData() {
+      await getListPost();
+
       const category = await api.get("/api/categories?populate=icon");
       setCategories(category.data.data);
     }
@@ -39,6 +43,14 @@ export default function Home() {
     favorite();
   }, []);
 
+  async function getListPost() {
+    const response = await api.get(
+      "/api/posts?populate=cover&sort=createdAt:desc"
+    );
+    setPosts(response.data.data);
+  }
+
+  // Favoritando uma categoria.
   async function handleFavorite(id) {
     const response = await setFavorite(id);
     setFavCategories(response);
@@ -75,7 +87,7 @@ export default function Home() {
         {favCategories.length !== 0 && (
           <FlatList
             style={{ marginTop: 50, maxHeight: 100, paddingStart: 18 }}
-            contentContainerStyle={{ paddingEnd: 18 }}
+            contentContainerStyle={{ paddingEnd: 26 }}
             data={favCategories}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -91,6 +103,14 @@ export default function Home() {
         >
           Conteúdos em alta
         </Text>
+
+        <FlatList
+          style={{ flex: 1, paddingHorizontal: 18 }}
+          showsVerticalScrollIndicator={false}
+          data={posts}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => <PostItem data={item} />}
+        />
       </View>
     </SafeAreaView>
   );
