@@ -22,7 +22,7 @@ export default function FavoritePost({ data }) {
     <TouchableOpacity style={styles.container} onPress={handleNavigate}>
       <ImageBackground
         source={{
-          uri: `http://192.168.1.106:1337${data?.attributes?.cover?.data?.attributes?.url}`,
+          uri: `http://192.168.1.105:1337${data?.attributes?.cover?.data?.attributes?.url}`,
         }}
         style={styles.cover}
         resizeMode="cover"

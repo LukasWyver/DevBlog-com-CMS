@@ -1,14 +1,24 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function PostItem({ data }) {
+  const navigation = useNavigation();
+
+  function handleDetails() {
+    navigation.navigate("Detail", { id: data?.id });
+  }
   return (
-    <TouchableOpacity style={styles.container} activeOpacity={0.7}>
+    <TouchableOpacity
+      style={styles.container}
+      activeOpacity={0.4}
+      onPress={handleDetails}
+    >
       <View style={styles.header}>
         <Image
           style={styles.cover}
           source={{
-            uri: `http://192.168.1.106:1337${data?.attributes?.cover?.data?.attributes?.url}`,
+            uri: `http://192.168.1.105:1337${data?.attributes?.cover?.data?.attributes?.url}`,
           }}
         />
       </View>
