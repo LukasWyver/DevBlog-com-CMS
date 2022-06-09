@@ -41,7 +41,7 @@ function Routes() {
         name="Search"
         component={Search}
         options={{
-          title: "Pesquisa",
+          title: "Procurando algo?",
           headerTintColor: "#fff",
           headerStyle: {
             backgroundColor: "#232630",
