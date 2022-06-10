@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import * as Animatable from "react-native-animatable";
 
 import api from "../../services/api";
 import { getFavorite, setFavorite } from "../../services/favorite";
@@ -17,11 +18,14 @@ import CategoryItem from "../../components/CategoryItem";
 import FavoritePost from "../../components/FavoritePost";
 import PostItem from "../../components/PostItem";
 
+const FlatListAnimated = Animatable.createAnimatableComponent(FlatList);
+
 export default function Home() {
   const navigation = useNavigation();
   const [categories, setCategories] = useState([]);
   const [favCategories, setFavCategories] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -44,10 +48,13 @@ export default function Home() {
   }, []);
 
   async function getListPost() {
+    setloading(true);
     const response = await api.get(
       "/api/posts?populate=cover&sort=createdAt:desc"
     );
     setPosts(response.data.data);
+
+    setloading(false);
   }
 
   // Favoritando uma categoria.
@@ -59,7 +66,9 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.name}>DevBlog</Text>
+        <Animatable.Text animation="fadeInLeft" style={styles.name}>
+          DevBlog
+        </Animatable.Text>
 
         <TouchableOpacity>
           <Feather
@@ -71,7 +80,9 @@ export default function Home() {
         </TouchableOpacity>
       </View>
 
-      <FlatList
+      <FlatListAnimated
+        animation="flipInX"
+        delay={500}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingRight: 12 }}
@@ -110,6 +121,8 @@ export default function Home() {
           data={posts}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => <PostItem data={item} />}
+          refreshing={loading}
+          onRefresh={() => getListPost()}
         />
       </View>
     </SafeAreaView>
